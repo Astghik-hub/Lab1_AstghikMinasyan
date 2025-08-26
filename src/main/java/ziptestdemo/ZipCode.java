@@ -71,7 +71,7 @@ public class ZipCode {
         String barCode = "1";
         
         if (Zip < 10000) {
-            for (int i = 0; i <= 5 - zipString.length(); i++) {
+            for (int i = 1; i <= 5 - zipString.length(); i++) {
                 realZip += "0";
             }
             realZip += zipString;
