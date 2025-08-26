@@ -14,32 +14,31 @@ public class ZipCode {
     public ZipCode(int num) {
        if (num > 99999) {
            System.out.printf("%d zip code is more than 5 digits %n", num);
-       } else {
-           this.Zip = num;
-       }
+           this.Zip = Integer.parseInt(String.valueOf(num).substring(1));
+       } else this.Zip = num;
     }
 
     public ZipCode(String zipCode) {
+        boolean validCode = true;
         if (zipCode.length() != 27) {
             System.out.println("Error: bar code must be in multiples of 5-binary digits");
-            return;
+            validCode = false;
         } 
         
         if (zipCode.charAt(0) != '1' || zipCode.charAt(zipCode.length() - 1) != '1') {
             System.out.println("Error: bar code missing a 1 at start or end");
-            return;
+            validCode = false;
         }
         
         for (int i = 1; i < 24; i++) {
             if (zipCode.charAt(i) != '0' || zipCode.charAt(i) != '1') {
                 System.out.printf("bar code character: %c must be '0' or '1' %n", zipCode.charAt(i));
+                validCode = false;
             }
-            
-            return;
         }
         
-        for (int i = 1; i < 24; i += 6) {
-            String sequence = zipCode.substring(i, i + 6);
+        for (int i = 1; i < 24; i += 5) {
+            String sequence = zipCode.substring(i, i + 5);
             int count1 = 0;
             int count0 = 0;
             
@@ -53,11 +52,13 @@ public class ZipCode {
             
             if (count1 != 2 || count0 != 3) {
                 System.out.printf("%s has invlalid sequence in the bar code %n", sequence);
-               return;
+                validCode = false;
             }
         }
-       
+        
+        if (validCode) {
             this.Zip = ParseBarCode(zipCode);
+        } else this.Zip = 0;
     }
     
     /**
@@ -110,6 +111,5 @@ public class ZipCode {
         }
         
         return num;
-    }
-    
+    }  
 }
