@@ -9,18 +9,36 @@ package ziptestdemo;
  * @author 2466920
  */
 public class ZipCode {
-    private int Zip;
+    protected int Zip;
 
     public ZipCode(int num) {
        if (num > 99999) {
-           System.out.printf("%d zip code is more than 5 digits", num);
+           System.out.printf("%d zip code is more than 5 digits %n", num);
        } else {
            this.Zip = num;
        }
     }
 
-    public ZipCode() {
+    public ZipCode(String zipCode) {
+        if (zipCode.length() != 27) {
+            System.out.println("Error: bar code must be in multiples of 5-binary digits");
+            return;
+        } 
         
+        if (zipCode.charAt(0) != '1' || zipCode.charAt(zipCode.length() - 1) != '1') {
+            System.out.println("Error: bar code missing a 1 at start or end");
+            return;
+        }
+        
+        for (int i = 0; i < 25; i++) {
+            if (zipCode.charAt(i) != '0' || zipCode.charAt(i) != '1') {
+                System.out.printf("bar code character: %c must be '0' or '1' %n", zipCode.charAt(i));
+            }
+            
+            return;
+        }
+       
+            ParseBarCode(zipCode);
     }
     
     /**
@@ -30,7 +48,7 @@ public class ZipCode {
     public String GetBarCode() {
         String zip = "1";
         
-        for(int i = 4; i >= 0; i--) {
+        for(int i = 0; i < 5; i++) {
             switch(String.valueOf(Zip).charAt(i)) {
                 case '0' -> zip += "11000";
                 case '1' -> zip += "00011";
@@ -54,10 +72,6 @@ public class ZipCode {
      * @return Zip code as an integer
      */
     private static int ParseBarCode(String barCode) {
-        if (barCode.length() != 27) {
-            System.out.println("Error: bar code must be in multiples of 5-binary digits");
-        }
-        
         int num = 0;
         String reduced = barCode.substring(1, barCode.length());
         for(int i = 4; i >= 0; i--) {
