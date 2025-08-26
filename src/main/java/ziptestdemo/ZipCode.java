@@ -66,24 +66,34 @@ public class ZipCode {
      * @return 
      */
     public String GetBarCode() {
-        String zip = "1";
+        String zipString = String.valueOf(Zip);
+        String realZip = "";
+        String barCode = "1";
+        
+        if (Zip < 10000) {
+            for (int i = 0; i < zipString.length(); i++) {
+                realZip += "0";
+            }
+            realZip += zipString;
+        } else realZip = zipString;
         
         for(int i = 0; i < 5; i++) {
-            switch(String.valueOf(Zip).charAt(i)) {
-                case '0' -> zip += "11000";
-                case '1' -> zip += "00011";
-                case '2' -> zip += "00101";
-                case '3' -> zip += "00110";
-                case '4' -> zip += "01001";
-                case '5' -> zip += "01010";
-                case '6' -> zip += "01100";
-                case '7' -> zip += "10001";
-                case '8' -> zip += "10010";
-                case '9' -> zip += "10100";
-            }
+            barCode += switch(realZip.charAt(i)) {
+                case '0' -> "11000";
+                case '1' -> "00011";
+                case '2' -> "00101";
+                case '3' -> "00110";
+                case '4' -> "01001";
+                case '5' -> "01010";
+                case '6' -> "01100";
+                case '7' -> "10001";
+                case '8' -> "10010";
+                case '9' -> "10100";
+                default -> "";
+            };
         }
         
-        return zip += "1";
+        return barCode += "1";
     }
     
     /**
