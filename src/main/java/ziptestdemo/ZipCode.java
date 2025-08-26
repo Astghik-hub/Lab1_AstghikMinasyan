@@ -30,15 +30,34 @@ public class ZipCode {
             return;
         }
         
-        for (int i = 0; i < 25; i++) {
+        for (int i = 1; i < 24; i++) {
             if (zipCode.charAt(i) != '0' || zipCode.charAt(i) != '1') {
                 System.out.printf("bar code character: %c must be '0' or '1' %n", zipCode.charAt(i));
             }
             
             return;
         }
+        
+        for (int i = 1; i < 24; i += 6) {
+            String sequence = zipCode.substring(i, i + 6);
+            int count1 = 0;
+            int count0 = 0;
+            
+            for (int j = 0; j < 5; j++) {
+                if (sequence.charAt(i) == '1') {
+                    count1++;
+                } else {
+                    count0++;
+                }
+            }
+            
+            if (count1 != 2 || count0 != 3) {
+                System.out.printf("%s has invlalid sequence in the bar code %n", sequence);
+               return;
+            }
+        }
        
-            ParseBarCode(zipCode);
+            this.Zip = ParseBarCode(zipCode);
     }
     
     /**
