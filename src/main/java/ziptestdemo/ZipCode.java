@@ -21,48 +21,49 @@ public class ZipCode {
 
     public ZipCode(String barCode) {
         boolean validCode = true;
-
-        while (validCode) {
             if (barCode.length() != 27) {
                 System.out.println("Error: bar code must be in multiples of 5-binary digits");
-                validCode = false;
+                this.Zip = 0;
+                return;
             }
 
+            
             if (barCode.charAt(0) != '1' || barCode.charAt(barCode.length() - 1) != '1') {
                 System.out.println("Error: bar code missing a 1 at start or end");
-                validCode = false;
+                this.Zip = 0;
+                return;
             }
 
-            for (int i = 1; i <= 24; i++) {
+            for (int i = 1; i <= 25; i++) {
                 if (barCode.charAt(i) != '0' && barCode.charAt(i) != '1') {
                     System.out.printf("bar code character: %c must be '0' or '1' %n", barCode.charAt(i));
                     validCode = false;
                 }
             }
-
-            for (int i = 1; i <= 21; i += 5) {
-                String sequence = barCode.substring(i, i + 5);
-                int count1 = 0;
-                int count0 = 0;
-
-                for (int j = 0; j < 5; j++) {
-                    if (sequence.charAt(j) == '1') {
-                        count1++;
-                    } else {
-                        count0++;
+            
+            if (validCode) {
+                for (int i = 1; i <= 21; i += 5) {
+                    String sequence = barCode.substring(i, i + 5);
+                    int count1 = 0;
+                    int count0 = 0;
+                    
+                    for (int j = 0; j < 5; j++) {
+                        if (sequence.charAt(j) == '1') {
+                            count1++;
+                        } else {
+                            count0++;
+                        }
+                    }
+                    if (count1 != 2 || count0 != 3) {
+                        System.out.printf("%s has invalid sequence in the bar code %n", sequence);
+                        validCode = false;
                     }
                 }
-
-                if (count1 != 2 || count0 != 3) {
-                    System.out.printf("%s has invlalid sequence in the bar code %n", sequence);
-                    validCode = false;
-                }
             }
-
+            
             if (validCode) {
                 this.Zip = ParseBarCode(barCode);
             } else this.Zip = 0;
-        }
     }
 
     /**
