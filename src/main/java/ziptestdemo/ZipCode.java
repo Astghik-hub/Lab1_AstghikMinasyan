@@ -2,6 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
+// Git repo URL: https://github.com/Astghik-hub/Lab1_AstghikMinasyan.git
 package ziptestdemo;
 
 /**
@@ -92,6 +94,11 @@ public class ZipCode {
      * @return the string of binary digits corresponding to the zip code
      */
     public String GetBarCode() {
+         // Check if Zip is greater than 0
+        if (Zip < 0) {
+           System.out.println("Invalid Zip");
+        }
+        
         String zipString = String.valueOf(Zip);
         String realZip = "";
         String barCode = "1";
