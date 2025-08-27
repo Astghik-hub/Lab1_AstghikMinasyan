@@ -9,67 +9,76 @@ package ziptestdemo;
  * @author 2466920
  */
 public class ZipCode {
+
     protected int Zip;
 
     public ZipCode(int num) {
-       if (num > 99999) {
-           System.out.printf("%d zip code is more than 5 digits %n", num);
-           this.Zip = Integer.parseInt(String.valueOf(num).substring(1));
-       } else this.Zip = num;
+        if (num > 99999) {
+            System.out.printf("%d zip code is more than 5 digits %n", num);
+        }
+        this.Zip = num;
     }
 
     public ZipCode(String barCode) {
         boolean validCode = true;
-        if (barCode.length() != 27) {
-            System.out.println("Error: bar code must be in multiples of 5-binary digits");
-            validCode = false;
-        } 
-        
-        if (barCode.charAt(0) != '1' || barCode.charAt(barCode.length() - 1) != '1') {
-            System.out.println("Error: bar code missing a 1 at start or end");
-            validCode = false;
-        }
-        
-        for (int i = 1; i < 24; i++) {
-            if (barCode.charAt(i) != '0' || barCode.charAt(i) != '1') {
-                System.out.printf("bar code character: %c must be '0' or '1' %n", barCode.charAt(i));
+
+        while (validCode) {
+            if (barCode.length() != 27) {
+                System.out.println("Error: bar code must be in multiples of 5-binary digits");
                 validCode = false;
             }
-        }
-        
-        for (int i = 1; i <= 21; i += 5) {
-            String sequence = barCode.substring(i, i + 5);
-            int count1 = 0;
-            int count0 = 0;
-            
-            for (int j = 0; j < 5; j++) {
-                if (sequence.charAt(i) == '1') {
-                    count1++;
-                } else {
-                    count0++;
+
+            if (barCode.charAt(0) != '1' || barCode.charAt(barCode.length() - 1) != '1') {
+                System.out.println("Error: bar code missing a 1 at start or end");
+                validCode = false;
+            }
+
+            for (int i = 1; i <= 24; i++) {
+                if (barCode.charAt(i) != '0' && barCode.charAt(i) != '1') {
+                    System.out.printf("bar code character: %c must be '0' or '1' %n", barCode.charAt(i));
+                    validCode = false;
                 }
             }
-            
-            if (count1 != 2 || count0 != 3) {
-                System.out.printf("%s has invlalid sequence in the bar code %n", sequence);
-                validCode = false;
+
+            for (int i = 1; i <= 21; i += 5) {
+                String sequence = barCode.substring(i, i + 5);
+                int count1 = 0;
+                int count0 = 0;
+
+                for (int j = 0; j < 5; j++) {
+                    if (sequence.charAt(j) == '1') {
+                        count1++;
+                    } else {
+                        count0++;
+                    }
+                }
+
+                if (count1 != 2 || count0 != 3) {
+                    System.out.printf("%s has invlalid sequence in the bar code %n", sequence);
+                    validCode = false;
+                }
             }
+
+            if (validCode) {
+                this.Zip = ParseBarCode(barCode);
+            } else this.Zip = 0;
         }
-        
-        if (validCode) {
-            this.Zip = ParseBarCode(barCode);
-        } else this.Zip = 0;
     }
-    
+
     /**
      * converts the ZIP code as a properly constructed string of binary digits
-     * @return 
+     *
+     * @return
      */
     public String GetBarCode() {
         String zipString = String.valueOf(Zip);
         String realZip = "";
         String barCode = "1";
-        
+
+        if (Zip > 99999) {
+            realZip += zipString.substring(1);
+        }
+
         if (Zip < 10000) {
             for (int i = 1; i <= 5 - zipString.length(); i++) {
                 realZip += "0";
@@ -77,8 +86,9 @@ public class ZipCode {
             realZip += zipString;
         } else realZip = zipString;
         
-        for(int i = 0; i < 5; i++) {
-            barCode += switch(realZip.charAt(i)) {
+
+        for (int i = 0; i < 5; i++) {
+            barCode += switch (realZip.charAt(i)) {
                 case '0' -> "11000";
                 case '1' -> "00011";
                 case '2' -> "00101";
@@ -92,19 +102,20 @@ public class ZipCode {
                 default -> "";
             };
         }
-        
+
         return barCode += "1";
     }
-    
+
     /**
      * converts the corresponding Zip code as an integer
+     *
      * @param barCode
      * @return Zip code as an integer
      */
     private static int ParseBarCode(String barCode) {
         String value = "";
-        for(int i = 1; i <= 21; i += 5) {
-            value += switch(barCode.substring(i, i + 5)) {
+        for (int i = 1; i <= 21; i += 5) {
+            value += switch (barCode.substring(i, i + 5)) {
                 case "11000" -> 0;
                 case "00011" -> 1;
                 case "00101" -> 2;
@@ -118,7 +129,7 @@ public class ZipCode {
                 default -> 0;
             };
         }
-        
+
         return Integer.parseInt(value);
-    }  
+    }
 }
